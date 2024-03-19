@@ -6,10 +6,11 @@ import { useDeleteBankMutation } from "../../redux/features/bank/bankApi";
 import { toast } from "react-toastify";
 
 type TViewBankProps = {
-    record: Bank
+    record: Bank;
+    readOnly?: boolean
 }
 
-const ViewBankInfo = ({ record }: TViewBankProps) => {
+const ViewBankInfo = ({ record, readOnly }: TViewBankProps) => {
     const [deleteBankAccount, { isError, isSuccess, isLoading }] = useDeleteBankMutation();
 
     useEffect(() => {
@@ -46,25 +47,27 @@ const ViewBankInfo = ({ record }: TViewBankProps) => {
                     </div>
                 </div>
             </div>
-            <div className='flex items-center justify-center gap-2 pt-4 lg:pt-6'>
-                <AppModal button={
-                    <button className="roundedBtn text-textDark bg-[#E8E8E8] text-sm">Delete</button>
-                }
-                    cancelButtonTitle="No, Don’t"
-                    primaryButtonTitle="Yes. Delete"
-                    primaryButtonAction={() => deleteBankAccount(record?.id)}
-                >
-                    <div className='max-w-80'>
-                        <p className="text-center text-[#828282] pt-4 text-lg">Are you sure delete <span className="text-textDark font-medium">{record?.accountName}</span> from the account list?</p>
-                    </div>
-                </AppModal>
 
-                <AppModal title="Edit New Bank Account" button={
-                    <button className="roundedBtn text-sm">Edit</button>
-                }>
-                    <EditBankAccount record={record} />
-                </AppModal>
-            </div>
+            {!readOnly &&
+                <div className='flex items-center justify-center gap-2 pt-4 lg:pt-6'>
+                    <AppModal button={
+                        <button className="roundedBtn text-textDark bg-[#E8E8E8] text-sm">Delete</button>
+                    }
+                        cancelButtonTitle="No, Don’t"
+                        primaryButtonTitle="Yes. Delete"
+                        primaryButtonAction={() => deleteBankAccount(record?.id)}
+                    >
+                        <div className='max-w-80'>
+                            <p className="text-center text-[#828282] pt-4 text-lg">Are you sure delete <span className="text-textDark font-medium">{record?.accountName}</span> from the account list?</p>
+                        </div>
+                    </AppModal>
+
+                    <AppModal title="Edit New Bank Account" button={
+                        <button className="roundedBtn text-sm">Edit</button>
+                    }>
+                        <EditBankAccount record={record} />
+                    </AppModal>
+                </div>}
         </div>
     );
 };

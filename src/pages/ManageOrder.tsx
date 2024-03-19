@@ -2,7 +2,7 @@ import AppModal from "../components/ui/AppModal";
 import { Avatar, Select } from "antd";
 import { FaNairaSign } from "react-icons/fa6";
 import { GrLocation } from "react-icons/gr";
-import ViewCrowdfunding from "../components/property/ViewProperty";
+import ViewProperty from "../components/property/ViewProperty";
 import AppTable from "../components/ui/AppTable";
 import { useMemo, useState } from "react";
 import { useEditOrderMutation, useGetOrderQuery } from "../redux/features/order/orderApi";
@@ -11,6 +11,10 @@ import { IoIosArrowDown } from "react-icons/io";
 import { ColumnsType } from "antd/es/table";
 import { Order, ResponseSuccessType } from "../types/common";
 import { toast } from "react-toastify";
+import ViewUser from "../components/manage-user/ViewUser";
+import { LuClock } from "react-icons/lu";
+import ViewBankInfo from "../components/bank-account/ViewBankInfo";
+import { HiOutlineCursorClick } from "react-icons/hi";
 
 const ManageOrder = () => {
     const [page, setPage] = useState(1)
@@ -25,7 +29,8 @@ const ManageOrder = () => {
             limit: 10,
             page,
             refName,
-            status: status.length ? status : "",
+            status: (status.length && status !== "paystack" && status !== "manual") ? status : "",
+            paymentType: (status === "paystack" || status === "manual") ? status : "",
         };
         const queryString = Object.keys(info).reduce((pre, key: string) => {
             const value = info[key as keyof typeof info];
@@ -53,7 +58,8 @@ const ManageOrder = () => {
 
     const handleStatusUpdate = async (status: string, id: string) => {
         const updateData = {
-            id, status
+            id, status,
+            isPaid: true
         }
         await updateOrder(updateData).unwrap().then((res: ResponseSuccessType) => {
             if (!res.success) {
@@ -66,14 +72,26 @@ const ManageOrder = () => {
         });
     }
 
+    const handleRefName = (value: string) => {
+        setRefName(value);
+        setStatus("")
+    }
+
+    const convertDate = (value: any) => {
+        const date = new Date(value);
+
+        return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
     const columns: ColumnsType<Order> = [
         {
             title: "",
             dataIndex: refName,
-            className: "min-w-[350px] md:min-w-[220px]",
+            className: "min-w-[300px] md:min-w-[200px]",
             render: (record: any, fullObj: any) => {
+                console.log(fullObj);
                 return (
-                    <div className="flex items-end gap-2 w-fit">
+                    <div className="flex items-end capitalize gap-1">
                         <AppModal
                             title="Crowdfunding Property Details"
                             button={
@@ -82,19 +100,19 @@ const ManageOrder = () => {
                                         fullObj[refName]?.thumbnail
                                     }
                                     alt=""
-                                    className="rounded-lg w-36 2xl:w-40 h-20 2xl:h-24 cursor-pointer"
+                                    className="rounded-lg min-w-20 max-w-20 border object-cover 2xl:min-w-32 2xl:max-w-32 h-16 2xl:h-20 cursor-pointer"
                                 />
                             }
                         >
-                            <ViewCrowdfunding type="currentLocation" record={record} />
+                            <ViewProperty readOnly={true} type="currentLocation" record={record} />
                         </AppModal>
                         <div className="w-fit">
-                            <p className="text-[#181818] text-sm">
-                                Property ID: #{fullObj[refName]?.id.slice(0, 10)}
+                            <p className="text-[#181818] line-clamp-1 text-xs 2xl:text-sm">
+                                Property ID: #{fullObj[refName]?.id}
                             </p>
                             <div className="pt-2">
-                                <p className="text-[#6B6B6F] text-sm">Property Name</p>
-                                <h2 className="text-[#181818] font-medium">{fullObj[refName]?.title}</h2>
+                                <p className="text-[#6B6B6F] text-xs 2xl:text-sm">Property Name</p>
+                                <h2 className="text-[#181818] text-xs 2xl:text-sm font-medium">{fullObj[refName]?.title}</h2>
                             </div>
                         </div>
                     </div>
@@ -104,44 +122,86 @@ const ManageOrder = () => {
         {
             title: "",
             dataIndex: refName,
-            className: "min-w-[180px]",
+            className: "min-w-[150px] md:min-w-[120px]",
             render: (record: any, fullObj: any) => {
                 return (
-                    <div className="flex flex-col justify-end h-20 2xl:h-24">
+                    <div className="flex flex-col justify-end capitalize h-20 2xl:h-24">
                         <p className="text-[#6B6B6F] text-sm">Location</p>
-                        <div className="pt-1 flex items-center gap-1">
-                            <GrLocation className="text-[#7CAA38]" />
-                            <h2 className="text-textDark">{fullObj[refName]?.streetLocation}</h2>
+                        <div className="pt-1 flex items-center gap-0.5 md:gap-1">
+                            <GrLocation className="text-[#7CAA38] text-base" />
+                            <h2 className="text-textDark line-clamp-1">{fullObj[refName]?.streetLocation}</h2>
                         </div>
                     </div>
                 );
             },
         },
-
-
         {
             title: "",
             dataIndex: refName,
-            className: "min-w-[80px]",
+            className: "min-w-[100px] md:min-w-[80px]",
             render: (record: any, fullObj: any) => {
                 return (
-                    fullObj?.orderBy ||
-                    <div className="flex flex-col justify-end h-20 2xl:h-24">
+                    <div className="flex flex-col justify-end capitalize h-20 2xl:h-24">
                         <p className="text-[#6B6B6F] text-sm">Buyer</p>
                         <div className="pt-1 flex items-center gap-1">
                             <Avatar src={fullObj?.orderBy?.profileImg} size={"small"} />
+                            <AppModal title="User Details" button={
+                                <p className="cursor-pointer text-sm">{fullObj?.orderBy?.name}</p>
+                            } >
+                                <ViewUser onlyView={true} role="User" record={fullObj?.orderBy} />
+                            </AppModal>
                         </div>
                     </div>
                 );
             },
         },
+        {
+            title: "",
+            dataIndex: refName,
+            className: "min-w-[150px] md:min-w-[130px]",
+            render: (record: any, fullObj: any) => {
+                return (
+                    <div className="flex flex-col justify-end capitalize h-20 2xl:h-24">
+                        <p className="text-[#6B6B6F] text-sm">Payment Method</p>
+                        <div className="pt-1 flex items-center gap-1">
+                            {fullObj?.paymentType === "paystack" ?
+                                <h2 className="text-textDark text-sm">{fullObj?.paymentType}</h2>
+                                :
+                                <AppModal title="Account Details" button={
+                                    <h2 className="text-textDark text-sm cursor-pointer flex items-center gap-1">{fullObj?.paymentType} <HiOutlineCursorClick /></h2>
+                                } >
+                                    <ViewBankInfo record={fullObj?.wealthBank} readOnly={true} />
+                                </AppModal>
+                            }
+                        </div>
+                    </div>
+                );
+            },
+        },
+        {
+            title: "",
+            dataIndex: refName,
+            className: "min-w-[150px] md:min-w-[120px]",
+            render: (record: any, fullObj: any) => {
+                return (
+                    <div className="flex flex-col justify-end capitalize h-20 2xl:h-24">
+                        <p className="text-[#6B6B6F] text-sm">Date</p>
+                        <div className="pt-1 flex items-center gap-1">
+                            <LuClock className="text-[#7CAA38]" />
+                            <h2 className="text-textDark">{convertDate(fullObj?.createdAt)}</h2>
+                        </div>
+                    </div>
+                );
+            },
+        },
+
         {
             title: "",
             dataIndex: refName,
             className: "min-w-[100px]",
             render: (record: any, fullObj: any) => {
                 return (
-                    <div className="flex flex-col justify-end h-20 2xl:h-24">
+                    <div className="flex flex-col justify-end capitalize h-20 2xl:h-24">
                         <p className="text-[#6B6B6F] text-sm">Status</p>
                         <div className="pt-1 flex items-center gap-1">
                             <AppPopover
@@ -184,26 +244,27 @@ const ManageOrder = () => {
     ];
 
     if (refName === "crowdFund") {
-        columns.splice(2, 0, {
-            title: "",
-            dataIndex: refName,
-            className: "min-w-[100px]",
-            render: (record: any, fullObj: any) => {
-                return (
-                    <div className="flex flex-col justify-end h-20 2xl:h-24">
-                        <p className="text-[#6B6B6F] text-sm">Fund Raised</p>
-                        <div className="pt-1 flex items-center gap-1">
-                            <FaNairaSign className="text-textDark" />
-                            <h2 className="text-textDark">{fullObj[refName]?.fundRaised}</h2>
-                        </div>
-                    </div>
-                );
-            },
-        },
+        columns.splice(4, 0,
             {
                 title: "",
                 dataIndex: refName,
-                className: "min-w-[100px]",
+                className: "min-w-[120px] md:min-w-[100px]",
+                render: (record: any, fullObj: any) => {
+                    return (
+                        <div className="flex flex-col justify-end h-20 2xl:h-24">
+                            <p className="text-[#6B6B6F] text-sm">Fund Raised</p>
+                            <div className="pt-1 flex items-center gap-1">
+                                <FaNairaSign className="text-textDark" />
+                                <h2 className="text-textDark">{fullObj[refName]?.fundRaised}</h2>
+                            </div>
+                        </div>
+                    );
+                },
+            },
+            {
+                title: "",
+                dataIndex: refName,
+                className: "min-w-[120px] md:min-w-[100px]",
                 render: (record: any, fullObj: any) => {
                     return (
                         <div className="flex flex-col justify-end h-20 2xl:h-24">
@@ -219,22 +280,23 @@ const ManageOrder = () => {
     }
 
     if (refName !== "crowdFund") {
-        columns.splice(2, 0, {
-            title: "",
-            dataIndex: refName,
-            className: "min-w-[120px]",
-            render: (record: any, fullObj: any) => {
-                return (
-                    <div className="flex flex-col justify-end h-20 2xl:h-24">
-                        <p className="text-[#6B6B6F] text-sm">price</p>
-                        <div className="pt-1 flex items-center gap-1">
-                            <FaNairaSign className="text-textDark" />
-                            <h2 className="text-textDark">{fullObj[refName]?.price}</h2>
+        columns.splice(3, 0,
+            {
+                title: "",
+                dataIndex: refName,
+                className: "min-w-[120px]",
+                render: (record: any, fullObj: any) => {
+                    return (
+                        <div className="flex flex-col justify-end h-20 2xl:h-24">
+                            <p className="text-[#6B6B6F] text-sm">price</p>
+                            <div className="pt-1 flex items-center gap-1">
+                                <FaNairaSign className="text-textDark" />
+                                <h2 className="text-textDark">{fullObj[refName]?.price}</h2>
+                            </div>
                         </div>
-                    </div>
-                );
-            },
-        },)
+                    );
+                },
+            },)
     }
     return (
         <AppTable
@@ -245,9 +307,9 @@ const ManageOrder = () => {
             headerText="Order List"
             tabs={
                 <div className='flex items-center gap-2 w-full md:w-3/5'>
-                    <button onClick={() => setRefName("crowdFund")} className={`${refName === "crowdFund" ? "roundedBtn" : "roundedBtn text-textDark bg-[#E6E6E7]"}`}>Crowdfunding</button>
-                    <button onClick={() => setRefName("property")} className={`${refName === "property" ? "roundedBtn" : "roundedBtn text-textDark bg-[#E6E6E7]"}`}>Current Location</button>
-                    <button onClick={() => setRefName("flipping")} className={`${refName === "flipping" ? "roundedBtn" : "roundedBtn text-textDark bg-[#E6E6E7]"}`}>Flipping</button>
+                    <button onClick={() => handleRefName("crowdFund")} className={`${refName === "crowdFund" ? "roundedBtn" : "roundedBtn text-textDark bg-[#E6E6E7]"}`}>Crowdfunding</button>
+                    <button onClick={() => handleRefName("property")} className={`${refName === "property" ? "roundedBtn" : "roundedBtn text-textDark bg-[#E6E6E7]"}`}>Current Location</button>
+                    <button onClick={() => handleRefName("flipping")} className={`${refName === "flipping" ? "roundedBtn" : "roundedBtn text-textDark bg-[#E6E6E7]"}`}>Flipping</button>
                 </div>
             }
             button={
@@ -256,12 +318,15 @@ const ManageOrder = () => {
                         style={{ width: 120 }}
                         placeholder="Select Status"
                         className="focus-visible:!ring-0 focus:!ring-0"
+                        value={status}
                         onChange={(value) => setStatus(value)}
                         options={[
                             { value: '', label: 'All Order' },
                             { value: 'pending', label: 'Pending' },
                             { value: 'success', label: 'Success' },
                             { value: 'denied', label: 'Denied' },
+                            { value: 'paystack', label: 'paystack' },
+                            { value: 'manual', label: 'manual' },
                         ]}
                     />
                 </div>

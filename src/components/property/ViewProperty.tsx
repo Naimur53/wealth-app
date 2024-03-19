@@ -8,12 +8,13 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useDeletePropertyMutation } from "../../redux/features/property/propertyApi";
 
-type TViewCrowdfundingProps = {
+type TViewPropertyProps = {
     type?: string;
     record: any;
+    readOnly?: boolean;
 }
 
-const ViewCrowdfunding = ({ record, type }: TViewCrowdfundingProps) => {
+const ViewProperty = ({ record, type, readOnly }: TViewPropertyProps) => {
     const [removeUserCrowdFund, { isLoading: crowdLoading, isSuccess: crowdSuccess }] = useDeleteCrowdFundMutation();
     const [removeUserCurrentLocation, { isLoading: currentLoading, isSuccess: currentSuccess }] = useDeletePropertyMutation();
 
@@ -170,7 +171,7 @@ const ViewCrowdfunding = ({ record, type }: TViewCrowdfundingProps) => {
                 </div>
             </div>
 
-            <div className='flex items-center justify-center gap-2 pt-4'>
+            {!readOnly && <div className='flex items-center justify-center gap-2 pt-4'>
                 <AppModal button={<button className="roundedBtn bg-bgred">Remove</button>}
                     cancelButtonTitle="No, Don’t"
                     primaryButtonTitle="Yes. Remove"
@@ -192,8 +193,9 @@ const ViewCrowdfunding = ({ record, type }: TViewCrowdfundingProps) => {
                     </Link>
                 )}
             </div>
+            }
         </div>
     );
 };
 
-export default ViewCrowdfunding;
+export default ViewProperty;

@@ -4,9 +4,10 @@ import AppModal from "../ui/AppModal";
 type TEditUserProps = {
     record: User,
     role: string;
+    onlyView?: boolean
 }
 
-const ViewUser = ({ record, role }: TEditUserProps) => {
+const ViewUser = ({ record, role, onlyView }: TEditUserProps) => {
     return (
         <div className='w-[560px]'>
             <div className='flex items-center justify-center py-6'>
@@ -36,7 +37,7 @@ const ViewUser = ({ record, role }: TEditUserProps) => {
                     <p className="text-textDark font-medium">{record?.location}</p>
                 </div>
             </div>
-            <div className='flex items-center justify-center gap-2 pt-4 lg:pt-6'>
+            {!onlyView && <div className='flex items-center justify-center gap-2 pt-4 lg:pt-6'>
                 <AppModal button={
                     <button className="roundedBtn text-white bg-bgred text-sm">Remove</button>
                 }
@@ -53,7 +54,7 @@ const ViewUser = ({ record, role }: TEditUserProps) => {
                 }>
                     <EditUser record={record} />
                 </AppModal> */}
-            </div>
+            </div>}
         </div>
     );
 };
