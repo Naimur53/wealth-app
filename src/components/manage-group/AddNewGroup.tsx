@@ -60,7 +60,7 @@ const AddNewGroup = ({ closeModal }: TAddNewGroup) => {
         const submitData = {
             ...data, thumbnail
         }
-        console.log(submitData);
+
         await addChatGroup(submitData).unwrap().then((res: any) => {
             if (!res.success) {
                 toast.error(res.data.message || "Something went wrong");

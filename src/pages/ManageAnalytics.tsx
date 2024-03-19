@@ -14,7 +14,7 @@ import AddNewProperty from "../components/property/AddNewProperty";
 const ManageAnalytics = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const { id } = useParams();
-    console.log(id);
+
     const infoPropertyQuery = useGetPropertyByIdQuery(id);
     const [deletePropertyState, { isError, isSuccess, isLoading }] = useDeletePropertyStateMutation();
     const infoQuery = useGetPropertyStateQuery(id);

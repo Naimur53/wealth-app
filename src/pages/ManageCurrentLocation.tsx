@@ -148,7 +148,7 @@ const ManageCurrentLocation = () => {
             dataIndex: "order",
             className: "min-w-[80px]",
             render: (order: string, record: Property) => {
-                console.log(record);
+
                 return (
                     <div className="flex flex-col justify-end h-20 2xl:h-24">
                         <p className="text-[#6B6B6F] text-sm">Buyer</p>

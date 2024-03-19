@@ -68,7 +68,7 @@ const EditUser = ({ record }: TEditUserProps) => {
         const submitData = {
             id: record.id, ...data, profileImg: image || record?.profileImg
         }
-        console.log(submitData);
+
         await editUser(submitData).unwrap().then((res: any) => {
             if (!res.success) {
                 toast.error(res.message || "Something went wrong");

@@ -89,7 +89,6 @@ const ManageOrder = () => {
             dataIndex: refName,
             className: "min-w-[300px] md:min-w-[200px]",
             render: (record: any, fullObj: any) => {
-                console.log(fullObj);
                 return (
                     <div className="flex items-end capitalize gap-1">
                         <AppModal

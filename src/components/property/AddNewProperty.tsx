@@ -28,7 +28,7 @@ const AddNewProperty = ({ propertyId, closeModal }: TAddNewPropertyState) => {
         const submitData = {
             ...data, propertyId
         }
-        console.log(submitData);
+
         await addPropertyState(submitData).unwrap().then((res: any) => {
             if (!res.success) {
                 toast.error(res.message || "Something went wrong");

@@ -26,7 +26,6 @@ export const userApi = apiSlice.injectEndpoints({
     }),
     editUser: builder.mutation({
       query: (info) => {
-        console.log("it is under redux", info);
         return {
           url: `/users/${info.id}`,
           method: "PATCH",
