@@ -24,7 +24,7 @@ const EditBankAccount = ({ record, closeModal }: TBankProps) => {
     const [loading, setLoading] = useState(false);
     const [logoOfBank, setLogoOfBank] = useState("");
     const [uploadImage, { data: imageData, isLoading: imageLoading, isError: imageError, isSuccess: imageSuccess }] = useUploadImageMutation();
-    const [editBankAccount] = useEditBankMutation();
+    const [editBankAccount, { isLoading }] = useEditBankMutation();
 
     const {
         register,
@@ -47,12 +47,12 @@ const EditBankAccount = ({ record, closeModal }: TBankProps) => {
         await uploadImage(formData).unwrap().then((res: ResponseSuccessType) => {
 
             if (!res.success) {
-                toast.error(res.message || "Something went wrong");
+                toast.error(res.data.message || "Something went wrong");
                 setLoading(false)
             }
         }).catch(res => {
             if (!res.success) {
-                toast.error(res.message || "Something went wrong");
+                toast.error(res.data.message || "Something went wrong");
                 setLoading(false)
             }
         })
@@ -66,24 +66,19 @@ const EditBankAccount = ({ record, closeModal }: TBankProps) => {
 
         await editBankAccount(submitData).unwrap().then((res: any) => {
             if (!res.success) {
-                toast.error(res.message || "Something went wrong");
+                toast.error(res.data.message || "Something went wrong");
             }
-            toast.success("User are edited successfully!");
+            toast.success("Bank Account are edited successfully!");
             if (closeModal) {
                 closeModal()
             }
 
         }).catch(res => {
             if (!res.success) {
-                toast.error(res.message || "Something went wrong");
+                toast.error(res.data.message || "Something went wrong");
             }
         });
     }
-    const bankNameOptions = [
-        { value: 'bankOfNigeria', label: 'Bank of Nigeria' },
-        { value: 'bankOfSpain', label: 'Bank Of Spain' },
-        { value: 'bankOfFrance', label: 'Bank Of France' },
-    ]
 
     const currencyOptions = [
         { value: 'naira', label: 'Naira' },
@@ -117,6 +112,12 @@ const EditBankAccount = ({ record, closeModal }: TBankProps) => {
                 </div>
 
                 <div className='flex flex-col text-textDark'>
+                    <label htmlFor="name">Bank Name</label>
+                    <input id="name" defaultValue={record?.name} className={`input ${errors.name && 'border-2 border-bgred  '}`} placeholder="Type your account holder name" {...register("name", { required: true })} />
+                    {errors.name && <p className="text-bgred">Bank Name is required.</p>}
+                </div>
+
+                <div className='flex flex-col text-textDark'>
                     <label htmlFor="accountName">Account Holder Name</label>
                     <input id="accountName" defaultValue={record?.accountName} className={`input ${errors.accountName && 'border-2 border-bgred  '}`} placeholder="Type your account holder name" {...register("accountName", { required: true })} />
                     {errors.accountName && <p className="text-bgred">Account Holder Name is required.</p>}
@@ -137,16 +138,11 @@ const EditBankAccount = ({ record, closeModal }: TBankProps) => {
                     {errors.typeOfBank && <p className="text-bgred">Currency is required.</p>}
                 </div>
 
-                <div className='flex flex-col text-textDark'>
-                    <label htmlFor="name">Bank Name</label>
-                    <AppSelect
-                        name={record?.name}
-                        defaultValue="Bank of Nigeria"
-                        control={control}
-                        options={bankNameOptions} />
-                </div>
                 <div className='md:col-span-2 flex items-center justify-center pt-4'>
-                    <input type="submit" className="roundedBtn cursor-pointer" value={"Save Update"} />
+                    {(isLoading || imageLoading) ? <SmallLoading />
+                        :
+                        <input type="submit" className="roundedBtn cursor-pointer" value={"Save Update"} />
+                    }
                 </div>
             </form>
         </div>

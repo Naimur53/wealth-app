@@ -27,6 +27,7 @@ import AddFaq from "../pages/AddFaq";
 import ManageLocation from "../pages/ManageLocation";
 import ManageAnalytics from "../pages/ManageAnalytics";
 import SuperAdminLayout from "../layouts/SuperAdminLayout";
+import AddCurrentLocation from "../pages/AddCurrentLocartion";
 
 export const router = createBrowserRouter([
   {
@@ -94,6 +95,10 @@ export const router = createBrowserRouter([
       {
         path: "/manage-current-location",
         element: <ManageCurrentLocation />,
+      },
+      {
+        path: "/add-current-location",
+        element: <AddCurrentLocation />,
       },
       {
         path: "/manage-flipping",

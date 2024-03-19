@@ -3,7 +3,7 @@ import AppModal from "../components/ui/AppModal";
 import { Avatar } from "antd";
 import { FaNairaSign } from "react-icons/fa6";
 import { GrLocation } from "react-icons/gr";
-import ViewCrowdfunding from "../components/manage-croudfunding/ViewCrowdfunding";
+import ViewProperty from "../components/property/ViewProperty";
 import AppTable from "../components/ui/AppTable";
 import { useEffect, useMemo, useState } from "react";
 import { useDeletePropertyMutation, useEditPropertyMutation, useGetPropertyQuery } from "../redux/features/property/propertyApi";
@@ -96,7 +96,7 @@ const ManageCurrentLocation = () => {
                                 />
                             }
                         >
-                            <ViewCrowdfunding type="currentLocation" record={record} />
+                            <ViewProperty type="currentLocation" record={record} />
                         </AppModal>
                         <div className="w-fit">
                             <p className="text-[#181818] text-sm">
@@ -148,11 +148,16 @@ const ManageCurrentLocation = () => {
             dataIndex: "order",
             className: "min-w-[80px]",
             render: (order: string, record: Property) => {
+                console.log(record);
                 return (
                     <div className="flex flex-col justify-end h-20 2xl:h-24">
                         <p className="text-[#6B6B6F] text-sm">Buyer</p>
-                        <div className="pt-1 flex items-center gap-1">
-                            <Avatar src={record?.order ? record?.order[0]?.orderBy?.profileImg : null} size={"small"} />
+                        <div className="pt-1">
+                            {
+                                record?.order[0]?.orderBy?.profileImg ?
+                                    <Avatar src={record?.order ? record?.order[0]?.orderBy?.profileImg : null} size={"small"} />
+                                    : "Not sold yet"
+                            }
                         </div>
                     </div>
                 );
@@ -211,31 +216,36 @@ const ManageCurrentLocation = () => {
             render: (text: string, record: Property) => {
                 return (
                     <div className="flex flex-col items-end pb-1 justify-between h-20 2xl:h-24">
-                        <Link to={`/manage-analytics/${record.id}`}>
-                            <button className="px-2.5 py-1.5 rounded-full text-xs text-white bg-[#D9A027] hover:bg-[#D9A027]/80">Manage Analytics</button>
-                        </Link>
-                        <Popover>
-                            <div className="flex flex-col items-end justify-end">
-                                <AppModal button={<button>Remove</button>}
-                                    cancelButtonTitle="No, Don’t"
-                                    primaryButtonTitle="Yes. Remove"
-                                    primaryButtonAction={() => removeProperty(record.id)}
-                                >
-                                    <div className="max-w-80">
-                                        <p className="text-center text-[#828282] pt-4 text-lg">
-                                            Are you sure remove{" "}
-                                            <span className="text-textDark font-medium">
-                                                {record?.title}
-                                            </span>{" "}
-                                            from the user list?
-                                        </p>
-                                    </div>
-                                </AppModal>
-                                {/* <Link to={`/edit-crowdfunding/${record?.id}`}>
+                        {record?.status !== "sold" &&
+                            <>
+                                <Link to={`/manage-analytics/${record.id}`}>
+                                    <button className="px-2.5 py-1.5 rounded-full text-xs text-white bg-[#D9A027] hover:bg-[#D9A027]/80">Manage Analytics</button>
+                                </Link>
+
+                                <Popover>
+                                    <div className="flex flex-col items-end justify-end">
+                                        <AppModal button={<button>Remove</button>}
+                                            cancelButtonTitle="No, Don’t"
+                                            primaryButtonTitle="Yes. Remove"
+                                            primaryButtonAction={() => removeProperty(record.id)}
+                                        >
+                                            <div className="max-w-80">
+                                                <p className="text-center text-[#828282] pt-4 text-lg">
+                                                    Are you sure remove{" "}
+                                                    <span className="text-textDark font-medium">
+                                                        {record?.title}
+                                                    </span>{" "}
+                                                    from the user list?
+                                                </p>
+                                            </div>
+                                        </AppModal>
+                                        {/* <Link to={`/edit-crowdfunding/${record?.id}`}>
                                     <button className="text-textDark">Edit</button>
                                 </Link> */}
-                            </div>
-                        </Popover>
+                                    </div>
+                                </Popover>
+                            </>
+                        }
                     </div>
                 );
             },
@@ -252,7 +262,9 @@ const ManageCurrentLocation = () => {
             inputPlaceholder="Search property"
             setPage={setPage}
             button={
-                <button className="roundedBtn">New Current location properties</button>
+                <Link to={"/add-current-location"}>
+                    <button className="roundedBtn">New Current location properties</button>
+                </Link>
             }
         />
     );

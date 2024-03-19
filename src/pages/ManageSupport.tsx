@@ -3,6 +3,7 @@ import { useGetFaqsQuery } from "../redux/features/faq/faqApi";
 import { Link } from "react-router-dom";
 
 type TFaq = {
+    id: string;
     question: string;
     ans: string;
 }

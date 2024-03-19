@@ -4,7 +4,7 @@ import Popover from "../components/ui/Popover";
 import { GrLocation } from "react-icons/gr";
 import { FaNairaSign } from "react-icons/fa6";
 import { Avatar } from "antd";
-import ViewCrowdfunding from "../components/manage-croudfunding/ViewCrowdfunding";
+import ViewProperty from "../components/property/ViewProperty";
 import { useDeleteCrowdFundMutation, useEditCrowdFundMutation, useGetCrowdFundsQuery } from "../redux/features/crowdFund/crowdFundApi";
 import { CrowdFund, Location, ResponseSuccessType } from "../types/common";
 import AppTable from "../components/ui/AppTable";
@@ -56,9 +56,9 @@ const ManageCrowdfunding = () => {
       } else {
         toast.success("CrowdFund property state updated successful!");
       }
-    }).catch(res => {
+    }).catch((res: any) => {
       if (!res.success) {
-        return toast.error(res.message || "Something went wrong");
+        return toast.error(res?.date.message || "Something went wrong");
       }
     });
   }
@@ -96,7 +96,7 @@ const ManageCrowdfunding = () => {
                 />
               }
             >
-              <ViewCrowdfunding type="crowdFund" record={record} />
+              <ViewProperty type="crowdFund" record={record} />
             </AppModal>
             <div className="w-fit">
               <p className="text-[#181818] text-sm">
@@ -161,20 +161,25 @@ const ManageCrowdfunding = () => {
     },
     {
       title: "",
-      dataIndex: "images",
-      className: "min-w-[80px]",
-      render: (images: string[]) => {
+      dataIndex: "Orders",
+      className: "min-w-[120px]",
+      render: (Orders: any[], record: CrowdFund) => {
         return (
           <div className="flex flex-col justify-end h-20 2xl:h-24">
             <p className="text-[#6B6B6F] text-sm">Donor</p>
-            <div className="pt-1 flex items-center gap-1">
-              <Avatar.Group size={"small"}>
-                {
-                  images.slice(0, 3).map(img => (
-                    <Avatar src={img} />
-                  ))
-                }
-              </Avatar.Group>
+            <div className="pt-1 text-sm">
+              {
+                record?.Orders.length > 0 ?
+                  <Avatar.Group size={"small"}>
+                    {
+                      record?.Orders.slice(0, 3).map((order) => (
+                        <Avatar src={order?.orderBy.profileImg} />
+                      ))
+                    }
+                  </Avatar.Group>
+                  :
+                  "No fund raised"
+              }
             </div>
           </div>
         );
@@ -233,28 +238,30 @@ const ManageCrowdfunding = () => {
       render: (text: string, record: CrowdFund) => {
         return (
           <div className="flex items-end pb-2 justify-center h-20 2xl:h-24">
-            <Popover>
-              <div className="flex flex-col items-end justify-end">
-                <AppModal button={<button>Remove</button>}
-                  cancelButtonTitle="No, Don’t"
-                  primaryButtonTitle="Yes. Remove"
-                  primaryButtonAction={() => removeUser(record.id)}
-                >
-                  <div className="max-w-80">
-                    <p className="text-center text-[#828282] pt-4 text-lg">
-                      Are you sure remove{" "}
-                      <span className="text-textDark font-medium">
-                        {record?.title}
-                      </span>{" "}
-                      from the user list?
-                    </p>
-                  </div>
-                </AppModal>
-                <Link to={`/edit-crowdfunding/${record?.id}`}>
-                  <button className="text-textDark">Edit</button>
-                </Link>
-              </div>
-            </Popover>
+            {record?.status !== "sold" &&
+              <Popover>
+                <div className="flex flex-col items-end justify-end">
+                  <AppModal button={<button>Remove</button>}
+                    cancelButtonTitle="No, Don’t"
+                    primaryButtonTitle="Yes. Remove"
+                    primaryButtonAction={() => removeUser(record.id)}
+                  >
+                    <div className="max-w-80">
+                      <p className="text-center text-[#828282] pt-4 text-lg">
+                        Are you sure remove{" "}
+                        <span className="text-textDark font-medium">
+                          {record?.title}
+                        </span>{" "}
+                        from the user list?
+                      </p>
+                    </div>
+                  </AppModal>
+                  <Link to={`/edit-crowdfunding/${record?.id}`}>
+                    <button className="text-textDark">Edit</button>
+                  </Link>
+                </div>
+              </Popover>
+            }
           </div>
         );
       },

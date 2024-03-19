@@ -72,7 +72,7 @@ const ManageUser = () => {
                         <AppModal title="User Details" button={
                             <p className="cursor-pointer">{name}</p>
                         } >
-                            <ViewUser record={record} />
+                            <ViewUser role="User" record={record} />
                         </AppModal>
                     </div>
                 )
@@ -91,7 +91,7 @@ const ManageUser = () => {
         {
             title: 'Payment Status',
             dataIndex: 'isPaid',
-            className: "min-w-[150px]",
+            className: "min-w-[140px]",
             render: (isPaid: boolean) => {
                 return (
                     <div className={`flex items-center gap-1`}>
@@ -181,9 +181,9 @@ const ManageUser = () => {
             setPage={setPage}
             headerText="Users List"
             inputPlaceholder="Search user"
-            button={
-                <button className="roundedBtn">New User</button>
-            }
+        // button={
+        //     <button className="roundedBtn">New User</button>
+        // }
         />
     );
 };

@@ -2,6 +2,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAddFaqMutation } from "../redux/features/faq/faqApi";
+import SmallLoading from "../components/ui/SmallLoading";
 
 type TInputs = {
     question: string;
@@ -10,10 +11,11 @@ type TInputs = {
 
 const AddFaq = () => {
     const navigate = useNavigate();
-    const [addFaq] = useAddFaqMutation()
+    const [addFaq, { isLoading }] = useAddFaqMutation()
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors },
     } = useForm<TInputs>();
 
@@ -25,7 +27,7 @@ const AddFaq = () => {
             }
             toast.success("Support are added successfully!");
             navigate('/manage-support');
-
+            reset()
         }).catch(res => {
             if (!res.success) {
                 toast.error(res.message || "Something went wrong");
@@ -77,11 +79,13 @@ const AddFaq = () => {
                         )}
                     </div>
                     <div className="flex items-center justify-center pt-4">
-                        <input
-                            type="submit"
-                            className="roundedBtn cursor-pointer"
-                            value={"Add"}
-                        />
+                        {isLoading ? <SmallLoading />
+                            :
+                            <input
+                                type="submit"
+                                className="roundedBtn cursor-pointer"
+                                value={"Add"}
+                            />}
                     </div>
                 </form>
             </div>

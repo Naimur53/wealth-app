@@ -40,7 +40,7 @@ const ManageGroup = () => {
                 return (
                     <div className='flex items-center gap-1'>
                         <img src={record?.thumbnail} alt="" className="rounded-full w-10 h-10" />
-                        <p className="cursor-pointer">{name}</p>
+                        <p>{name}</p>
                     </div>
                 )
             }

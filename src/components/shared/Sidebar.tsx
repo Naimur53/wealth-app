@@ -58,6 +58,7 @@ const Sidebar = () => {
           path: "/manage-current-location",
           Icon: HiOutlineBuildingOffice2,
           label: "Manage Current Location",
+          relativePath: "/add-current-location",
         },
         {
           path: "/manage-flipping",
@@ -109,34 +110,31 @@ const Sidebar = () => {
               <div key={nav.label}>
                 <Link
                   to={nav.path}
-                  className={`relative flex items-center gap-2 2xl:gap-3 pl-2 lg:pl-4 hover:bg-textDark hover:rounded-[10px]  hover:text-white hover:font-semibold group py-1.5 2xl:py-2 ${
-                    pathname === nav.path ||
-                    pathname === nav.relativePath ||
-                    pathname === nav.relativePath2
-                      ? "text-white font-semibold bg-textDark rounded-[10px]"
-                      : "text-textSecondary"
-                  }`}
-                >
-                  <div
-                    className={`w-9 h-9 flex items-center justify-center rounded-full group-hover:bg-[#494949] p-1 ${
-                      pathname === nav.path ||
+                  className={`relative flex items-center gap-2 2xl:gap-3 pl-2 lg:pl-4 hover:bg-textDark hover:rounded-[10px]  hover:text-white hover:font-semibold group py-1.5 2xl:py-2 ${pathname === nav.path ||
                       pathname === nav.relativePath ||
                       pathname === nav.relativePath2
+                      ? "text-white font-semibold bg-textDark rounded-[10px]"
+                      : "text-textSecondary"
+                    }`}
+                >
+                  <div
+                    className={`w-9 h-9 flex items-center justify-center rounded-full group-hover:bg-[#494949] p-1 ${pathname === nav.path ||
+                        pathname === nav.relativePath ||
+                        pathname === nav.relativePath2
                         ? "bg-[#494949]"
                         : "bg-[#F5F5F6]"
-                    }`}
+                      }`}
                   >
                     <nav.Icon className="text-xl " />
                   </div>
                   <p className="">{nav.label}</p>
                   <div
-                    className={`group-hover:bg-[#EC9414] absolute h-4 w-1 right-0 top-[35%] rounded-l ${
-                      pathname === nav.path ||
-                      pathname === nav.relativePath ||
-                      pathname === nav.relativePath2
+                    className={`group-hover:bg-[#EC9414] absolute h-4 w-1 right-0 top-[35%] rounded-l ${pathname === nav.path ||
+                        pathname === nav.relativePath ||
+                        pathname === nav.relativePath2
                         ? "bg-[#EC9414]"
                         : ""
-                    }`}
+                      }`}
                   ></div>
                 </Link>
               </div>

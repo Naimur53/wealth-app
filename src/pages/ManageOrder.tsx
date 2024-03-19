@@ -2,7 +2,7 @@ import AppModal from "../components/ui/AppModal";
 import { Avatar, Select } from "antd";
 import { FaNairaSign } from "react-icons/fa6";
 import { GrLocation } from "react-icons/gr";
-import ViewCrowdfunding from "../components/manage-croudfunding/ViewCrowdfunding";
+import ViewCrowdfunding from "../components/property/ViewProperty";
 import AppTable from "../components/ui/AppTable";
 import { useMemo, useState } from "react";
 import { useEditOrderMutation, useGetOrderQuery } from "../redux/features/order/orderApi";

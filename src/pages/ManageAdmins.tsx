@@ -1,7 +1,5 @@
-import EditUser from "../components/manage-user/EditUser";
 import ViewUser from "../components/manage-user/ViewUser";
 import AppModal from "../components/ui/AppModal";
-import Popover from "../components/ui/Popover";
 import { Link } from "react-router-dom";
 import { useEditUserMutation, useGetUsersQuery } from "../redux/features/user/userApi";
 import { useMemo, useState } from "react";
@@ -85,7 +83,7 @@ const ManageAdmins = () => {
               title="Admin Details"
               button={<p className="cursor-pointer">{name}</p>}
             >
-              <ViewUser record={record} />
+              <ViewUser role="admin" record={record} />
             </AppModal>
           </div>
         );
@@ -141,30 +139,26 @@ const ManageAdmins = () => {
                 </p>
               </div>
             </AppModal>
-            <Popover>
-              <div className="flex flex-col items-end justify-end">
-                <AppModal
-                  button={<button>{record?.isBlocked ? "UnBlock" : "Block"}</button>}
-                  cancelButtonTitle="No, Don’t"
-                  primaryButtonTitle={`Yes. ${record?.isBlocked ? "UnBlock" : "Block"}`}
-                  primaryButtonAction={() => handleBlockUser(record?.id, record?.isBlocked ? false : true)}
-                >
-                  <div className="max-w-80">
-                    <p className="text-center text-[#828282] pt-4 text-lg">
-                      Are you sure {record?.isBlocked ? "UnBlock" : "Block"}{" "}
-                      <span className="text-textDark font-medium">
-                        {record?.name}
-                      </span>{" "}
-                      from the admin list?
-                    </p>
-                  </div>
-                </AppModal>
-
-                <AppModal title="Edit Admin" button={<button>Edit</button>}>
-                  <EditUser record={record} />
-                </AppModal>
+            <AppModal
+              button={
+                <button className="text-xs font-medium px-4 py-1 rounded-full bg-[#E6E6E7]">
+                  {record?.isBlocked ? "UnBlock" : "Block"}
+                </button>
+              }
+              cancelButtonTitle="No, Don’t"
+              primaryButtonTitle={`Yes. ${record?.isBlocked ? "UnBlock" : "Block"}`}
+              primaryButtonAction={() => handleBlockUser(record?.id, record?.isBlocked ? false : true)}
+            >
+              <div className="max-w-80">
+                <p className="text-center text-[#828282] pt-4 text-lg">
+                  Are you sure {record?.isBlocked ? "UnBlock" : "Block"}{" "}
+                  <span className="text-textDark font-medium">
+                    {record?.name}
+                  </span>{" "}
+                  from the admin list?
+                </p>
               </div>
-            </Popover>
+            </AppModal>
           </div>
         );
       },

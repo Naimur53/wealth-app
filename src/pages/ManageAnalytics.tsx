@@ -1,6 +1,5 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useDeletePropertyStateMutation, useGetPropertyStateQuery } from "../redux/features/propertyState/propertyStateApi";
-import Loading from "../components/ui/Loading";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import AppTable from "../components/ui/AppTable";

@@ -54,13 +54,26 @@ const ViewCrowdfunding = ({ record, type }: TViewCrowdfundingProps) => {
                 </div>
                 <div className='pt-1'>
                     <p className="text-[#6B6B6F] text-sm">Donor</p>
-                    <Avatar.Group>
-                        {
-                            record?.images.map((img: string) => (
-                                <Avatar src={img} />
-                            ))
-                        }
-                    </Avatar.Group>
+                    {
+                        type === "currentLocation" && ((type === "currentLocation" && record?.order?.length > 0) ?
+                            <Avatar.Group>
+                                {
+                                    record?.order.map((order: any) => (
+                                        <Avatar src={order?.orderBy.profileImg} />
+                                    ))
+                                }
+                            </Avatar.Group> : "No Fund Raised")
+                    }
+                    {
+                        type !== "currentLocation" && ((type !== "currentLocation" && record?.Orders?.length > 0) ?
+                            <Avatar.Group>
+                                {
+                                    record?.Orders.map((order: any) => (
+                                        <Avatar src={order?.orderBy.profileImg} />
+                                    ))
+                                }
+                            </Avatar.Group> : "Not Sold yet")
+                    }
                 </div>
             </div>
 
@@ -169,7 +182,7 @@ const ViewCrowdfunding = ({ record, type }: TViewCrowdfundingProps) => {
                             <span className="text-textDark font-medium">
                                 {record?.title}
                             </span>{" "}
-                            from the user list?
+                            from the property list?
                         </p>
                     </div>
                 </AppModal>

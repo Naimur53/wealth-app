@@ -15,6 +15,7 @@ const MakeAdmin = () => {
     const queryString = useMemo(() => {
         const info = {
             role: "user",
+            isChampion: "false",
             limit: 10,
             page,
             searchTerm: search.length ? search : undefined,
@@ -58,10 +59,10 @@ const MakeAdmin = () => {
                     <div className='flex items-center gap-1'>
                         <img src={record?.profileImg} alt="" className="rounded-full w-10 h-10" />
                         <AppModal
-                            title="Admin Details"
+                            title="User Details"
                             button={<p className="cursor-pointer">{name}</p>}
                         >
-                            <ViewUser record={record} />
+                            <ViewUser role="User" record={record} />
                         </AppModal>
                     </div>
                 )

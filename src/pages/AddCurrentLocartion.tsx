@@ -2,16 +2,17 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import AppSelect from "../components/ui/AppSelect";
 import LocationAppSelect from "../components/manage-croudfunding/LocationAppSelect";
-import { useAddCrowdFundMutation, useUploadImageMutation } from "../redux/features/crowdFund/crowdFundApi";
+import { useUploadImageMutation } from "../redux/features/crowdFund/crowdFundApi";
 import { toast } from "react-toastify";
 import { ResponseSuccessType } from "../types/common";
 import SmallLoading from "../components/ui/SmallLoading";
 import { useEffect, useState } from "react";
 import Loading from "../components/ui/Loading";
+import { useAddPropertyMutation } from "../redux/features/property/propertyApi";
 
 type TInputs = {
   title: string;
-  targetFund: number;
+  price: number;
   size: string;
   description: string;
   streetLocation: string;
@@ -24,13 +25,13 @@ type TInputs = {
   rooms: string;
 };
 
-const AddCrowdfunding = () => {
+const AddCurrentLocation = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState('');
   const [uploadImage, { data: imageData, isError: imageError, isSuccess: imageSuccess, isLoading: imageLoading }] = useUploadImageMutation();
   // const [uploadVideo, { data: videoData, isLoading: isVideoLoading, isError: videoError, isSuccess: videoSuccess }] = useUploadVideoMutation();
-  const [addCrowdfund, { isLoading: crowdLoading }] = useAddCrowdFundMutation();
+  const [addCurrentLocation, { isLoading }] = useAddPropertyMutation();
 
   const [thumbnail, setThumbnail] = useState("");
   // const [videoUrl, setVideoUrl] = useState("");
@@ -43,6 +44,7 @@ const AddCrowdfunding = () => {
     register,
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<TInputs>();
 
@@ -53,16 +55,16 @@ const AddCrowdfunding = () => {
       const submitData = {
         ...data, thumbnail, images: [image1, image2, image3, image4]
       }
-      await addCrowdfund(submitData).unwrap().then(res => {
+      await addCurrentLocation(submitData).unwrap().then(res => {
         if (!res.success) {
-          toast.error(res.message || "Something went wrong");
+          toast.error(res.data.message || "Something went wrong");
         }
-        toast.success("Crowdfunding are added successfully!");
-        navigate('/manage-crowdfunding');
-
+        toast.success("Current Location are added successfully!");
+        navigate('/manage-current-location');
+        reset();
       }).catch(res => {
         if (!res.success) {
-          toast.error(res.message || "Something went wrong");
+          toast.error(res.data.message || "Something went wrong");
         }
       });
     }
@@ -129,7 +131,7 @@ const AddCrowdfunding = () => {
   return (
     <>
       <Link
-        to={"/manage-crowdfunding"}
+        to={"/manage-current-location"}
         className="text-xl 2xl:text-2xl w-fit font-medium text-[#343A40] flex items-center gap-2"
       >
         <img
@@ -141,10 +143,10 @@ const AddCrowdfunding = () => {
       </Link>
 
       {
-        crowdLoading ? <Loading />
+        isLoading ? <Loading />
           :
           <div className="bg-[#F8F8F8] p-3 md:p-4 rounded-2xl mt-4">
-            <h1 className="md:text-xl font-medium">Add New Crowdfunding</h1>
+            <h1 className="md:text-xl font-medium">Add New Current Location</h1>
             <form className="space-y-2 md:space-y-4 pt-4 pb-2" onSubmit={handleSubmit(onSubmit)}>
               <div className="grid grid-cols-1 md:grid-cols-5 gap-2 md:gap-4">
                 <div className="md:col-span-3 flex flex-col text-textDark">
@@ -197,34 +199,20 @@ const AddCrowdfunding = () => {
                 )}
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
-                <div className="flex flex-col text-textDark">
-                  <label htmlFor="fundRaised">Fund Raised</label>
-                  <input
-                    id="fundRaised"
-                    type="number"
-                    className={`input ${errors.fundRaised && "border-2 border-bgred  "
-                      }`}
-                    placeholder="Fund Raised number"
-                    {...register("fundRaised", { valueAsNumber: true })}
-                  />
-                  {errors.fundRaised && (
-                    <p className="text-bgred"> Fund Raised is required.</p>
-                  )}
-                </div>
+              <div className="grid grid-cols-3 gap-2 md:gap-4">
 
                 <div className="flex flex-col text-textDark">
-                  <label htmlFor="targetFund">Target Amount</label>
+                  <label htmlFor="price">Price Amount</label>
                   <input
-                    id="targetFund"
+                    id="price"
                     type="number"
-                    className={`input ${errors.targetFund && "border-2 border-bgred  "
+                    className={`input ${errors.price && "border-2 border-bgred  "
                       }`}
                     placeholder="Target Amount number"
-                    {...register("targetFund", { required: true, valueAsNumber: true })}
+                    {...register("price", { required: true, valueAsNumber: true })}
                   />
-                  {errors.targetFund && (
-                    <p className="text-bgred"> Target Amount is required.</p>
+                  {errors.price && (
+                    <p className="text-bgred"> Price Amount is required.</p>
                   )}
                 </div>
 
@@ -384,11 +372,14 @@ const AddCrowdfunding = () => {
               </div>
 
               <div className="flex items-center justify-center pt-4">
-                <input
-                  type="submit"
-                  className="roundedBtn cursor-pointer"
-                  value={"Add Properties"}
-                />
+                {(isLoading || imageLoading) ? <SmallLoading />
+                  :
+                  <input
+                    type="submit"
+                    className="roundedBtn cursor-pointer"
+                    value={"Add Properties"}
+                  />
+                }
               </div>
             </form>
           </div>
@@ -398,4 +389,4 @@ const AddCrowdfunding = () => {
   );
 };
 
-export default AddCrowdfunding;
+export default AddCurrentLocation;

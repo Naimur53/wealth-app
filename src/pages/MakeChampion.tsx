@@ -5,6 +5,7 @@ import { useEditUserMutation, useGetUsersQuery } from "../redux/features/user/us
 import { useEffect, useMemo, useState } from "react";
 import { User } from "../types/common";
 import { toast } from "react-toastify";
+import ViewUser from "../components/manage-user/ViewUser";
 
 const MakeChampion = () => {
     const [page, setPage] = useState(1);
@@ -56,7 +57,12 @@ const MakeChampion = () => {
                 return (
                     <div className='flex items-center gap-1'>
                         <img src={record?.profileImg} alt="" className="rounded-full w-10 h-10" />
-                        <p className="cursor-pointer">{name}</p>
+                        <AppModal
+                            title="User Details"
+                            button={<p className="cursor-pointer">{name}</p>}
+                        >
+                            <ViewUser role="User" record={record} />
+                        </AppModal>
                     </div>
                 )
             }

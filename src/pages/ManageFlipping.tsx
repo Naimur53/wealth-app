@@ -3,7 +3,7 @@ import AppModal from "../components/ui/AppModal";
 import { Avatar } from "antd";
 import { FaNairaSign } from "react-icons/fa6";
 import { GrLocation } from "react-icons/gr";
-import ViewCrowdfunding from "../components/manage-croudfunding/ViewCrowdfunding";
+import ViewProperty from "../components/property/ViewProperty";
 import { useEffect, useMemo, useState } from "react";
 import AppTable from "../components/ui/AppTable";
 import { useDeleteFlippingMutation, useEditFlippingMutation, useGetFlippingQuery } from "../redux/features/flipping/flippingApi";
@@ -42,7 +42,6 @@ const ManageFlipping = () => {
         const updateData = {
             id, status
         }
-        console.log(updateData);
         updateFlippingStatus(updateData);
     }
 
@@ -90,7 +89,7 @@ const ManageFlipping = () => {
                                 />
                             }
                         >
-                            <ViewCrowdfunding type="flipping" record={record} />
+                            <ViewProperty type="flipping" record={record} />
                         </AppModal>
                         <div className="w-fit">
                             <p className="text-[#181818] text-sm">
@@ -145,8 +144,12 @@ const ManageFlipping = () => {
                 return (
                     <div className="flex flex-col justify-end h-20 2xl:h-24">
                         <p className="text-[#6B6B6F] text-sm">Buyer</p>
-                        <div className="pt-1 flex items-center gap-1">
-                            <Avatar src={record?.Orders ? record?.Orders[0]?.orderBy?.profileImg : null} size={"small"} />
+                        <div className="pt-1">
+                            {
+                                record?.Orders.length > 0 ?
+                                    <Avatar src={record?.Orders ? record?.Orders[0]?.orderBy?.profileImg : null} size={"small"} />
+                                    : "Not sold yet"
+                            }
                         </div>
                     </div>
                 );
@@ -267,7 +270,7 @@ const ManageFlipping = () => {
                                             <span className="text-textDark font-medium">
                                                 {record?.title}
                                             </span>{" "}
-                                            from the user list?
+                                            from the property list?
                                         </p>
                                     </div>
                                 </AppModal>
@@ -291,9 +294,9 @@ const ManageFlipping = () => {
             setPage={setPage}
             headerText="Flipping List"
             inputPlaceholder="Search property"
-            button={
-                <button className="roundedBtn">New Flipping properties</button>
-            }
+        // button={
+        //     <button className="roundedBtn">New Flipping properties</button>
+        // }
         />
     );
 };

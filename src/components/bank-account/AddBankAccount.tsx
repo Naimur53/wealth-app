@@ -23,12 +23,13 @@ const AddBankAccount = ({ closeModal }: TAddBankAccount) => {
     const [loading, setLoading] = useState(false);
     const [logoOfBank, setLogoOfBank] = useState("");
     const [uploadImage, { data: imageData, isLoading: imageLoading, isError: imageError, isSuccess: imageSuccess }] = useUploadImageMutation();
-    const [addChatGroup] = useAddBankMutation();
+    const [addBank, { isLoading }] = useAddBankMutation();
 
     const {
         register,
         control,
         handleSubmit,
+        reset,
         formState: { errors },
     } = useForm<TInputs>();
 
@@ -46,12 +47,12 @@ const AddBankAccount = ({ closeModal }: TAddBankAccount) => {
         await uploadImage(formData).unwrap().then((res: ResponseSuccessType) => {
 
             if (!res.success) {
-                toast.error(res.message || "Something went wrong");
+                toast.error(res.data.message || "Something went wrong");
                 setLoading(false)
             }
         }).catch(res => {
             if (!res.success) {
-                toast.error(res.message || "Something went wrong");
+                toast.error(res.data.message || "Something went wrong");
                 setLoading(false)
             }
         })
@@ -63,27 +64,21 @@ const AddBankAccount = ({ closeModal }: TAddBankAccount) => {
             ...data, logoOfBank
         }
 
-        await addChatGroup(submitData).unwrap().then((res: any) => {
+        await addBank(submitData).unwrap().then((res: any) => {
             if (!res.success) {
-                toast.error(res.message || "Something went wrong");
+                toast.error(res.data.message || "Something went wrong");
             }
-            toast.success("User are edited successfully!");
+            toast.success("Bank Account Added successfully!");
             if (closeModal) {
                 closeModal()
             }
-
+            reset();
         }).catch(res => {
             if (!res.success) {
-                toast.error(res.message || "Something went wrong");
+                toast.error(res.data.message || "Something went wrong");
             }
         });
     }
-
-    const bankNameOptions = [
-        { value: 'bankOfNigeria', label: 'Bank of Nigeria' },
-        { value: 'bankOfSpain', label: 'Bank Of Spain' },
-        { value: 'bankOfFrance', label: 'Bank Of France' },
-    ]
 
     const currencyOptions = [
         { value: 'naira', label: 'Naira' },
@@ -106,7 +101,7 @@ const AddBankAccount = ({ closeModal }: TAddBankAccount) => {
                 <input onChange={(e) => handleFileUpload(e.target.files && e.target.files[0])} type="file" name="" id="logoOfBank" className="hidden" />
                 <div className='md:col-span-2 flex flex-col items-center gap-1 justify-center'>
                     {
-                        loading ? <SmallLoading className="rounded-lg border border-[#FEFAEC] w-[100px] h-[80px]" /> :
+                        loading ? <SmallLoading className="rounded-lg w-[100px] h-[80px]" /> :
                             <label htmlFor="logoOfBank" className="rounded-lg cursor-pointer w-[100px] h-[80px] flex items-center justify-center ">
                                 {
                                     logoOfBank ?
@@ -120,6 +115,11 @@ const AddBankAccount = ({ closeModal }: TAddBankAccount) => {
                     <p className="text-sm text-center text-textDark">Bank Thumbnail</p>
                 </div>
 
+                <div className='flex flex-col text-textDark'>
+                    <label htmlFor="name">Bank Name</label>
+                    <input id="name" className={`input ${errors.name && 'border-2 border-bgred  '}`} placeholder="Type your account number" {...register("name", { required: true })} />
+                    {errors.name && <p className="text-bgred"> Bank name is required.</p>}
+                </div>
                 <div className='flex flex-col text-textDark'>
                     <label htmlFor="accountName">Account Holder Name</label>
                     <input id="accountName" className={`input ${errors.accountName && 'border-2 border-bgred  '}`} placeholder="Type your account holder name" {...register("accountName", { required: true })} />
@@ -141,16 +141,11 @@ const AddBankAccount = ({ closeModal }: TAddBankAccount) => {
                     {errors.typeOfBank && <p className="text-bgred">Currency is required.</p>}
                 </div>
 
-                <div className='flex flex-col text-textDark'>
-                    <label htmlFor="name">Bank Name</label>
-                    <AppSelect
-                        name="name"
-                        placeholder="Bank of Nigeria"
-                        control={control}
-                        options={bankNameOptions} />
-                </div>
                 <div className='md:col-span-2 flex items-center justify-center pt-4'>
-                    <input type="submit" className="roundedBtn cursor-pointer" value={"Add"} />
+                    {(isLoading || imageLoading) ? <SmallLoading />
+                        :
+                        <input type="submit" className="roundedBtn cursor-pointer" value={"Add"} />
+                    }
                 </div>
             </form>
         </div>

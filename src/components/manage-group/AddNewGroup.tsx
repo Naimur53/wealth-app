@@ -20,12 +20,13 @@ const AddNewGroup = ({ closeModal }: TAddNewGroup) => {
     const [loading, setLoading] = useState(false);
     const [thumbnail, setThumbnail] = useState("");
     const [uploadImage, { data: imageData, isLoading: imageLoading, isError: imageError, isSuccess: imageSuccess }] = useUploadImageMutation();
-    const [addChatGroup] = useAddGroupMutation();
+    const [addChatGroup, { isLoading }] = useAddGroupMutation();
 
     const {
         register,
         control,
         handleSubmit,
+        reset,
         formState: { errors },
     } = useForm<TInputs>();
 
@@ -62,16 +63,16 @@ const AddNewGroup = ({ closeModal }: TAddNewGroup) => {
         console.log(submitData);
         await addChatGroup(submitData).unwrap().then((res: any) => {
             if (!res.success) {
-                toast.error(res.message || "Something went wrong");
+                toast.error(res.data.message || "Something went wrong");
             }
-            toast.success("User are edited successfully!");
+            toast.success("Chat Group edited successfully!");
             if (closeModal) {
                 closeModal()
             }
-
+            reset()
         }).catch(res => {
             if (!res.success) {
-                toast.error(res.message || "Something went wrong");
+                toast.error(res.data.message || "Something went wrong");
             }
         });
     }
@@ -98,7 +99,7 @@ const AddNewGroup = ({ closeModal }: TAddNewGroup) => {
                 <input onChange={(e) => handleFileUpload(e.target.files && e.target.files[0])} type="file" name="" id="thumbnail" className="hidden" />
                 <div className='md:col-span-2 flex flex-col items-center gap-1 justify-center'>
                     {
-                        loading ? <SmallLoading className="rounded-full border border-[#E3E7E7] w-[100px] h-[100px]" /> :
+                        loading ? <SmallLoading className="rounded-full w-[100px] h-[100px]" /> :
                             <label htmlFor="thumbnail" className="rounded-full cursor-pointer w-[100px] h-[100px] flex items-center justify-center ">
                                 {
                                     thumbnail ?
@@ -128,7 +129,10 @@ const AddNewGroup = ({ closeModal }: TAddNewGroup) => {
                 </div>
 
                 <div className='md:col-span-2 flex items-center justify-center pt-4'>
-                    <input type="submit" className="roundedBtn cursor-pointer" value={"Add"} />
+                    {(isLoading || imageLoading) ? <SmallLoading />
+                        :
+                        <input type="submit" className="roundedBtn cursor-pointer" value={"Add"} />
+                    }
                 </div>
             </form>
         </div>
