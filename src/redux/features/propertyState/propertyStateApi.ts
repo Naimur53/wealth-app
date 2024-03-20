@@ -16,7 +16,7 @@ export const propertyStateApi = apiSlice.injectEndpoints({
     addPropertyState: builder.mutation({
       query: (info) => {
         return {
-          url: "/propertyState",
+          url: "/propertyState/multi-upload",
           method: "POST",
           body: info,
         };

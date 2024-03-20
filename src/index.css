@@ -15,7 +15,7 @@
     @apply w-full bg-bgSecondary text-white font-semibold cursor-pointer text-center p-2 lg:p-3 2xl:p-4 rounded-md lg:rounded-lg 2xl:rounded-xl;
   }
   .roundedBtn {
-    @apply bg-textDark text-sm md:text-base text-white py-1 md:py-2 2xl:py-3 px-3 lg:px-6 rounded-full;
+    @apply bg-textDark hover:bg-black/90 text-sm md:text-base text-white py-1 md:py-2 2xl:py-3 px-3 lg:px-6 rounded-full;
   }
   .input {
     @apply px-4 py-2 2xl:py-3 rounded-lg 2xl:rounded-[10px] shadow-sm border border-[#E6E6E7];

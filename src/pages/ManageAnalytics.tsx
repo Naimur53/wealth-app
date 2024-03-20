@@ -9,7 +9,7 @@ import { Location, Property } from "../types/common";
 import { useGetPropertyByIdQuery } from "../redux/features/property/propertyApi";
 import AppModal from "../components/ui/AppModal";
 import { AiOutlineDelete } from "react-icons/ai";
-import AddNewProperty from "../components/property/AddNewProperty";
+import AddNewPropertyState from "../components/property/AddNewPropertyState";
 
 const ManageAnalytics = () => {
     const [modalOpen, setModalOpen] = useState(false);
@@ -179,7 +179,7 @@ const ManageAnalytics = () => {
                         modalOpen={modalOpen}
                         setModalOpen={setModalOpen}
                     >
-                        <AddNewProperty propertyId={id as string} closeModal={() => setModalOpen(false)} />
+                        <AddNewPropertyState propertyId={id as string} closeModal={() => setModalOpen(false)} />
                     </AppModal>
                 }
             />
