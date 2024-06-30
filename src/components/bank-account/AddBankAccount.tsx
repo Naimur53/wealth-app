@@ -7,6 +7,7 @@ import { useUploadImageMutation } from "../../redux/features/crowdFund/crowdFund
 import { toast } from "react-toastify";
 import { ResponseSuccessType } from "../../types/common";
 import { FaPlus } from "react-icons/fa";
+import AppButton from "../ui/AppButton";
 
 type TInputs = {
     accountName: string;
@@ -59,6 +60,9 @@ const AddBankAccount = ({ closeModal }: TAddBankAccount) => {
     }
 
     const onSubmit: SubmitHandler<TInputs> = async (data) => {
+        if (!logoOfBank) {
+            return toast.error("Please upload logo and try again.", { toastId: 1 });
+        }
         const submitData = {
             ...data, logoOfBank
         }
@@ -67,7 +71,7 @@ const AddBankAccount = ({ closeModal }: TAddBankAccount) => {
             if (!res.success) {
                 toast.error(res.message || "Something went wrong");
             }
-            toast.success("User are edited successfully!");
+            toast.success("Bank are added successfully!");
             if (closeModal) {
                 closeModal()
             }
@@ -78,12 +82,6 @@ const AddBankAccount = ({ closeModal }: TAddBankAccount) => {
             }
         });
     }
-
-    const bankNameOptions = [
-        { value: 'bankOfNigeria', label: 'Bank of Nigeria' },
-        { value: 'bankOfSpain', label: 'Bank Of Spain' },
-        { value: 'bankOfFrance', label: 'Bank Of France' },
-    ]
 
     const currencyOptions = [
         { value: 'naira', label: 'Naira' },
@@ -141,16 +139,18 @@ const AddBankAccount = ({ closeModal }: TAddBankAccount) => {
                     {errors.typeOfBank && <p className="text-bgred">Currency is required.</p>}
                 </div>
 
+
                 <div className='flex flex-col text-textDark'>
                     <label htmlFor="name">Bank Name</label>
-                    <AppSelect
-                        name="name"
-                        placeholder="Bank of Nigeria"
-                        control={control}
-                        options={bankNameOptions} />
+                    <input id="name" className={`input ${errors.name && 'border-2 border-bgred  '}`} placeholder="Type your Bank Name" {...register("name", { required: true })} />
+                    {errors.name && <p className="text-bgred">Bank Name is required.</p>}
                 </div>
+
                 <div className='md:col-span-2 flex items-center justify-center pt-4'>
-                    <input type="submit" className="roundedBtn cursor-pointer" value={"Add"} />
+                    <AppButton
+                        label="Add"
+                        isLoading={loading || imageLoading}
+                    />
                 </div>
             </form>
         </div>

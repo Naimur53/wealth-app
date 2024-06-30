@@ -6,6 +6,7 @@ import { ResponseSuccessType } from "../../types/common";
 import { toast } from "react-toastify";
 import { FaPlus } from "react-icons/fa";
 import { useAddLocationMutation } from "../../redux/features/location/locationApi";
+import AppButton from "../ui/AppButton";
 
 type TInputs = {
     name: string;
@@ -55,21 +56,21 @@ const AddNewLocation = ({ closeModal }: TAddNewLocation) => {
     }
 
     const onSubmit: SubmitHandler<TInputs> = async (data) => {
+        if (!imgUrl) {
+            return toast.error("Please upload Location image and try again.", { toastId: 1 });
+        }
         const submitData = {
             ...data, imgUrl
         }
         await addChatGroup(submitData).unwrap().then((res: any) => {
-            if (!res.success) {
-                toast.error(res.message || "Something went wrong");
-            }
-            toast.success("location are added successfully!");
+            toast.success("location are added successfully!", { toastId: 1 });
             if (closeModal) {
                 closeModal()
             }
 
         }).catch(res => {
             if (!res.success) {
-                toast.error(res.message || "Something went wrong");
+                toast.error(res.message || "Something went wrong", { toastId: 1 });
             }
         });
     }
@@ -111,7 +112,10 @@ const AddNewLocation = ({ closeModal }: TAddNewLocation) => {
                 </div>
 
                 <div className='flex items-center justify-center pt-4'>
-                    <input type="submit" className="roundedBtn cursor-pointer" value={"Add"} />
+                    <AppButton
+                        label="Add"
+                        isLoading={loading || imageLoading}
+                    />
                 </div>
             </form>
         </div>
