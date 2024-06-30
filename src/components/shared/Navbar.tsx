@@ -23,7 +23,7 @@ const Navbar = () => {
 
   return (
     <div className="bg-bgWhite">
-      <div className="container px-5 mx-auto flex items-center justify-between py-1.5 2xl:py-3 ">
+      <div className="px-5 md:px-8 lg:px-12 2xl:px-14 flex items-center justify-between py-1.5 2xl:py-3 ">
         <div className="">
           <img src="/images/wealth.png" alt="" className="w-20 lg:w-24 2xl:w-[120px] h-6 lg:h-8 2xl:h-10" />
           <p className="text-[#6B6B6F] text-xs lg:text-sm">by promiseland estate</p>
@@ -42,7 +42,7 @@ const Navbar = () => {
                 <h3 className="text-lg font-semibold text-textDarkBlue capitalize">
                   {user?.name}
                 </h3>
-                <p className="text-[#5C5D5E] text-xs">{user?.role}</p>
+                <p className="text-[#5C5D5E] uppercase text-xs">{user?.role}</p>
               </div>
               <SlArrowDown />
             </div>
