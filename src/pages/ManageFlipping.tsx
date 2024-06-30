@@ -291,9 +291,9 @@ const ManageFlipping = () => {
             setPage={setPage}
             headerText="Flipping List"
             inputPlaceholder="Search property"
-            button={
-                <button className="roundedBtn">New Flipping properties</button>
-            }
+        // button={
+        //     <button className="roundedBtn">New Flipping properties</button>
+        // }
         />
     );
 };
