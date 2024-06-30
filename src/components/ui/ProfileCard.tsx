@@ -11,7 +11,7 @@ const ProfileCard = ({ user }: { user: User }) => {
             <div className="space-y-2 lg:space-y-4 text-center divide-y divide-gray-700">
                 <div className="lg:my-2 space-y-1">
                     <h2 className="text-lg md:text-xl font-semibold lg:text-2xl capitalize">{user?.name}</h2>
-                    <p className="px-5 text-xs sm:text-base text-textSecondary">{user?.role}</p>
+                    <p className="px-5 text-xs sm:text-base text-textSecondary uppercase">{user?.role}</p>
                     <p className="px-5 text-xs sm:text-base text-textSecondary">{user?.email}</p>
                 </div>
                 <div className="flex justify-center pt-2 space-x-4 align-center">

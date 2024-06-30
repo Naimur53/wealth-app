@@ -1,8 +1,10 @@
+import { Skeleton } from "antd";
 import CollapseDiv from "../components/ui/CollapseDiv";
 import { useGetFaqsQuery } from "../redux/features/faq/faqApi";
 import { Link } from "react-router-dom";
 
 type TFaq = {
+    id: string;
     question: string;
     ans: string;
 }
@@ -26,7 +28,7 @@ const ManageSupport = () => {
     //     return queryString;
     // }, [debounceInput]);
 
-    const { data } = useGetFaqsQuery("");
+    const { data, isFetching } = useGetFaqsQuery("");
 
     return (
         <div className="rounded-2xl border border-[#E6E6E7] overflow-x-auto ">
@@ -48,12 +50,15 @@ const ManageSupport = () => {
                     className="w-full h-full bg-[#F5EFEA] outline-none border-none focus:border-none pl-2"
                 />
             </div> */}
+            {
+                isFetching ? <Skeleton /> :
 
-            <div className='space-y-2 lg:space-y-3 px-4 lg:px-7 py-3 lg:py-5'>
-                {data?.data?.map((faq: TFaq) => (
-                    <CollapseDiv key={faq?.question} data={faq} />
-                ))}
-            </div>
+                    <div className='space-y-2 lg:space-y-3 px-4 lg:px-7 py-3 lg:py-5'>
+                        {data?.data?.map((faq: TFaq) => (
+                            <CollapseDiv key={faq?.question} data={faq} />
+                        ))}
+                    </div>
+            }
         </div>
     );
 };

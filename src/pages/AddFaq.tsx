@@ -2,6 +2,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAddFaqMutation } from "../redux/features/faq/faqApi";
+import AppButton from "../components/ui/AppButton";
 
 type TInputs = {
     question: string;
@@ -10,7 +11,7 @@ type TInputs = {
 
 const AddFaq = () => {
     const navigate = useNavigate();
-    const [addFaq] = useAddFaqMutation()
+    const [addFaq, { isLoading }] = useAddFaqMutation()
     const {
         register,
         handleSubmit,
@@ -20,9 +21,6 @@ const AddFaq = () => {
     const onSubmit: SubmitHandler<TInputs> = async (data) => {
 
         await addFaq(data).unwrap().then(res => {
-            if (!res.success) {
-                toast.error(res.message || "Something went wrong");
-            }
             toast.success("Support are added successfully!");
             navigate('/manage-support');
 
@@ -77,10 +75,9 @@ const AddFaq = () => {
                         )}
                     </div>
                     <div className="flex items-center justify-center pt-4">
-                        <input
-                            type="submit"
-                            className="roundedBtn cursor-pointer"
-                            value={"Add"}
+                        <AppButton
+                            label="Add"
+                            isLoading={isLoading}
                         />
                     </div>
                 </form>

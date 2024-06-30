@@ -7,6 +7,7 @@ import { ResponseSuccessType } from "../../types/common";
 import { toast } from "react-toastify";
 import { FaPlus } from "react-icons/fa";
 import { useAddGroupMutation } from "../../redux/features/group/groupApi";
+import AppButton from "../ui/AppButton";
 
 type TInputs = {
     name: string;
@@ -56,15 +57,18 @@ const AddNewGroup = ({ closeModal }: TAddNewGroup) => {
     }
 
     const onSubmit: SubmitHandler<TInputs> = async (data) => {
+        if (!thumbnail) {
+            return toast.error("Please upload Group image and try again.", { toastId: 1 });
+        }
         const submitData = {
             ...data, thumbnail
         }
-        console.log(submitData);
+
         await addChatGroup(submitData).unwrap().then((res: any) => {
             if (!res.success) {
                 toast.error(res.message || "Something went wrong");
             }
-            toast.success("User are edited successfully!");
+            toast.success("Add New Chat Group Added successfully!");
             if (closeModal) {
                 closeModal()
             }
@@ -128,7 +132,10 @@ const AddNewGroup = ({ closeModal }: TAddNewGroup) => {
                 </div>
 
                 <div className='md:col-span-2 flex items-center justify-center pt-4'>
-                    <input type="submit" className="roundedBtn cursor-pointer" value={"Add"} />
+                    <AppButton
+                        label="Add"
+                        isLoading={loading || imageLoading}
+                    />
                 </div>
             </form>
         </div>

@@ -27,7 +27,7 @@ const SuperAdminLayout = ({ children }: Props) => {
   }
 
   if (user?.role !== UserRole.SUPER_ADMIN) {
-    // router("/");
+    router("/manage-crowdfunding");
     return (
       <div className="flex justify-center">
         <Loading></Loading>

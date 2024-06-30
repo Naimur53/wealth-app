@@ -27,6 +27,7 @@ import AddFaq from "../pages/AddFaq";
 import ManageLocation from "../pages/ManageLocation";
 import ManageAnalytics from "../pages/ManageAnalytics";
 import SuperAdminLayout from "../layouts/SuperAdminLayout";
+import PrivateLayout from "../layouts/PrivateLayout";
 
 export const router = createBrowserRouter([
   {
@@ -36,7 +37,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Dashboard />,
+        element: <SuperAdminLayout><Dashboard /></SuperAdminLayout>,
       },
       {
         path: "/manage-admins",
@@ -74,30 +75,39 @@ export const router = createBrowserRouter([
         path: "/manage-user",
         element: (
           <SuperAdminLayout>
-            {" "}
             <ManageUser />
           </SuperAdminLayout>
         ),
       },
       {
         path: "/manage-crowdfunding",
-        element: <ManageCrowdfunding />,
+        element: <PrivateLayout>
+          <ManageCrowdfunding />
+        </PrivateLayout>,
       },
       {
         path: "/add-crowdfunding",
-        element: <AddCrowdfunding />,
+        element: <PrivateLayout>
+          <AddCrowdfunding />
+        </PrivateLayout>,
       },
       {
         path: "/edit-crowdfunding/:id",
-        element: <EditCrowdfunding />,
+        element: <PrivateLayout>
+          <EditCrowdfunding />
+        </PrivateLayout>,
       },
       {
         path: "/manage-current-location",
-        element: <ManageCurrentLocation />,
+        element: <PrivateLayout>
+          <ManageCurrentLocation />
+        </PrivateLayout>,
       },
       {
         path: "/manage-flipping",
-        element: <ManageFlipping />,
+        element: <PrivateLayout>
+          <ManageFlipping />
+        </PrivateLayout>,
       },
       {
         path: "/manage-bank",
@@ -109,31 +119,41 @@ export const router = createBrowserRouter([
       },
       {
         path: "/manage-group",
-        element: <ManageGroup />,
+        element: <PrivateLayout>
+          <ManageGroup />
+        </PrivateLayout>,
       },
       {
         path: "/manage-location",
-        element: <ManageLocation />,
+        element: <PrivateLayout>
+          <ManageLocation />
+        </PrivateLayout>,
       },
       {
         path: "/manage-order",
         element: (
-          <SuperAdminLayout>
+          <PrivateLayout>
             <ManageOrder />
-          </SuperAdminLayout>
+          </PrivateLayout>
         ),
       },
       {
         path: "/manage-analytics/:id",
-        element: <ManageAnalytics />,
+        element: <PrivateLayout>
+          <ManageAnalytics />
+        </PrivateLayout>,
       },
       {
         path: "/manage-support",
-        element: <ManageSupport />,
+        element: <PrivateLayout>
+          <ManageSupport />
+        </PrivateLayout>,
       },
       {
         path: "/add-faq",
-        element: <AddFaq />,
+        element: <PrivateLayout>
+          <AddFaq />
+        </PrivateLayout>,
       },
     ],
   },

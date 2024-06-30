@@ -37,11 +37,11 @@ const PrivateLayout = ({ children }: TPrivateLayoutProps) => {
   if (user.role === UserRole.USER) {
     return (
       <div className="text-center h-screen  flex-col flex justify-center items-center text-xl font-bold">
-        <h2> You are not admin!</h2>
+        <h2 className="2xl:text-5xl text-textSecondary pb-4">Opps! You are not Admin!</h2>
         <Link
           to="sign-in"
           onClick={() => dispatch(userLoggedOut())}
-          className="block border px-4 text-md py-2 mt-5 text-red-600 border-red-600 rounded-full"
+          className="block border px-4 lg:px-8 text-md py-2 mt-5 text-red-600 border-red-600 rounded-full"
         >
           Sign in
         </Link>

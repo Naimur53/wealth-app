@@ -251,9 +251,9 @@ const ManageCurrentLocation = () => {
             headerText="Current Location List"
             inputPlaceholder="Search property"
             setPage={setPage}
-            button={
-                <button className="roundedBtn">New Current location properties</button>
-            }
+        // button={
+        //     <button className="roundedBtn">New Current location properties</button>
+        // }
         />
     );
 };
