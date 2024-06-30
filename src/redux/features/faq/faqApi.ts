@@ -1,5 +1,6 @@
 import { apiSlice } from "../apiSlice/apiSlice";
 import { tagTypes } from "../apiSlice/tagTypesList";
+
 export const faqApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getFaqs: builder.query({
@@ -10,9 +11,11 @@ export const faqApi = apiSlice.injectEndpoints({
       },
       providesTags: [tagTypes.faq],
     }),
+
     getFaqById: builder.query({
       query: (id) => `/faq/${id}`,
     }),
+
     addFaq: builder.mutation({
       query: (info) => {
         return {
@@ -23,6 +26,7 @@ export const faqApi = apiSlice.injectEndpoints({
       },
       invalidatesTags: [tagTypes.faq],
     }),
+
     editFaq: builder.mutation({
       query: (info) => {
         return {
@@ -33,6 +37,7 @@ export const faqApi = apiSlice.injectEndpoints({
       },
       invalidatesTags: [tagTypes.faq],
     }),
+
     deleteFaq: builder.mutation({
       query: (id) => {
         return {
@@ -44,6 +49,7 @@ export const faqApi = apiSlice.injectEndpoints({
     }),
   }),
 });
+
 export const {
   useGetFaqsQuery,
   useGetFaqByIdQuery,
